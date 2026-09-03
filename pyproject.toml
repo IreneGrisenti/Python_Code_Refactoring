@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "order_report"
+version = "0.1.0"
+description = "Reporting tool that reads e-commerce data"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas==3.0.5",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==9.1.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

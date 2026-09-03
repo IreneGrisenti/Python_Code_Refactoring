@@ -60,7 +60,7 @@ Koden går inte att återanvända eller testa i isolerade delar.
 **Förslag:** Byt till namn som beskriver innehållet, t.ex. `sales_by_category` och `sales_by_region`.
 
 
-### Obs 7- Duplicerad kod i rapportgenereringen
+### Obs 7 - Duplicerad kod i rapportgenereringen
 
 **Observation:** `result1`, `result2` och `returns_by_category` följer samma mönster: `groupby(...).agg(...)`, avrundning av `total_sales`, beräkning av `return_rate`, sortering och sparning till CSV.  
 Det som faktiskt skiljer dem åt är vilken kolumn de grupperar på, vilka kolumner som aggregeras och vilken kolumn resultatet sorteras på.
