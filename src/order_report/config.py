@@ -8,4 +8,4 @@ from pathlib import Path
 class ReportConfig:
     """Sökvägar för att skapa en rapport."""
     input_path: Path = Path("data/orders.csv")
-    output_path: Path = Path("output")
+    output_path: Path = Path("output_after_refactoring")

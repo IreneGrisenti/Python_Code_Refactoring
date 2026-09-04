@@ -18,7 +18,9 @@ logger = logging.getLogger(__name__)
 
 def load_data(path: Path) -> pd.DataFrame:
     logger.info("Läser order data från %s", path)
-    return pd.read_csv(path)
+    data = pd.read_csv(path)
+    logger.info("Läste in %d rader", len(data))
+    return data
 
 
 def save_report(report: pd.DataFrame, output_folder: Path, report_key: str) -> None:
