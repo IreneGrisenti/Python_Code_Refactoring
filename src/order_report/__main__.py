@@ -1,8 +1,8 @@
 """Kör order-rapportens pipeline."""
 
-from config import ReportConfig
-from logging_config import configure_logging
-from pipeline import run_pipeline
+from order_report.config import ReportConfig
+from order_report.logging_config import configure_logging
+from order_report.pipeline import run_pipeline
 
 def main() -> None:
     configure_logging()

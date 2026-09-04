@@ -42,7 +42,7 @@ def normalize_categorical_columns(data: pd.DataFrame) -> pd.DataFrame:
     for column in CATEGORICAL_COLUMNS_TO_NORMALIZE:
         copied_data[column] = copied_data[column].fillna("Unknown").astype(str).str.strip().str.title()
 
-    logger.info("Normaliserade strängkolumner: %s", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
+    logger.info("Normaliserade kolumner: %s.", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 
@@ -59,7 +59,7 @@ def coerce_numeric_columns(data: pd.DataFrame) -> pd.DataFrame:
 
     copied_data["discount"] = pd.to_numeric(copied_data["discount"], errors="coerce").fillna(0)
 
-    logger.info("Normaliserade numeriska kolumner: %s", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
+    logger.info("Normaliserade kolumner: %s.", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 

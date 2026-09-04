@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 
 
 def load_data(path: Path) -> pd.DataFrame:
-    logger.info("Läser order data från %s", path)
+    logger.info("Läser order data från %s.", path)
     data = pd.read_csv(path)
-    logger.info("Läste in %d rader", len(data))
+    logger.info("Läste in %d rader.", len(data))
     return data
 
 
@@ -28,4 +28,4 @@ def save_report(report: pd.DataFrame, output_folder: Path, report_key: str) -> N
     path = output_folder / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     report.to_csv(path, index=False)
-    logger.info("Sparade rapport %s till %s", filename, path)
+    logger.info("Sparade rapport %s till %s.", filename, path)

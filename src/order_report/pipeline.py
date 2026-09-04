@@ -21,13 +21,13 @@ def run_pipeline(config: ReportConfig) -> dict[str, pd.DataFrame]:
     reports = {
         "overview": create_order_overview(enriched_data),
         "sales_by_category": create_sales_report(enriched_data, group_col="product_category", sort_col="total_sales"),
-        "sales_py_region": create_sales_report(enriched_data, group_col="region", sort_col="total_sales"),
-        "return_by_category": create_returns_report(enriched_data, group_col="product_category", sort_col="return_rate")
+        "sales_by_region": create_sales_report(enriched_data, group_col="region", sort_col="total_sales"),
+        "returns_by_category": create_returns_report(enriched_data, group_col="product_category", sort_col="return_rate")
     }
 
     for report_key, report in reports.items():
         save_report(report, config.output_path, report_key)
 
-    logger.info("Pipeline klar, % rapporter sparade", len(reports))
+    logger.info("Pipeline klar, %d rapporter sparade.", len(reports))
 
     return reports

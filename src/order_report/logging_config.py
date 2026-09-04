@@ -27,7 +27,7 @@ def configure_logging() -> None:
     console_handler.setFormatter(formatter)
 
     file_handler = logging.FileHandler(
-        "temperature_tools.log",
+        "order_report.log",
         encoding="utf-8",
     )
     file_handler.setLevel(logging.DEBUG)
