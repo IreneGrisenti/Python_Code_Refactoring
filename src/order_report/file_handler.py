@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 import logging
 
+
 REPORT_FILENAMES = {
     "overview": "overview.csv",
     "sales_by_category": "sales_by_category.csv",
@@ -11,11 +12,14 @@ REPORT_FILENAMES = {
     "returns_by_category": "returns_by_category.csv"
 }
 
+
 logger = logging.getLogger(__name__)
+
 
 def load_data(path: Path) -> pd.DataFrame:
     logger.info("Läser order data från %s", path)
     return pd.read_csv(path)
+
 
 def save_report(report: pd.DataFrame, output_folder: Path, report_key: str) -> None:
     filename = REPORT_FILENAMES[report_key]

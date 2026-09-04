@@ -31,6 +31,7 @@ def check_required_columns(data: pd.DataFrame) -> None:
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Saknade kolumner: {missing}")
+    
     logger.info("Alla nödvändiga kolumner hittades: %s kolumner.", len(REQUIRED_COLUMNS))
 
 
@@ -38,11 +39,11 @@ def normalize_categorical_columns(data: pd.DataFrame) -> pd.DataFrame:
     """Fyller saknade värden och normaliserar strängkolumner (region, product_category)."""
 
     copied_data = data.copy()
-
     for column in CATEGORICAL_COLUMNS_TO_NORMALIZE:
         copied_data[column] = copied_data[column].fillna("Unknown").astype(str).str.strip().str.title()
 
     logger.info("Normaliserade strängkolumner: %s", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
+
     return copied_data
 
 
@@ -59,6 +60,7 @@ def coerce_numeric_columns(data: pd.DataFrame) -> pd.DataFrame:
     copied_data["discount"] = pd.to_numeric(copied_data["discount"], errors="coerce").fillna(0)
 
     logger.info("Normaliserade numeriska kolumner: %s", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
+
     return copied_data
 
 
@@ -74,7 +76,9 @@ def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
         .str.lower()
         .isin(["true", "yes", "1", "ja"])
     )
+
     logger.info("Normaliserade kolumn returned.")
+
     return copied_data
 
 
