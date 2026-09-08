@@ -1,4 +1,4 @@
-"""Ansvarar för att kontrollera och städa order-datan innan den bearbetas vidare."""
+"""Responsible for checking and cleaning the order data before further processing."""
 
 import pandas as pd
 import logging
@@ -25,47 +25,57 @@ NUMERIC_COLUMNS_TO_NORMALIZE = ["quantity", "unit_price", "discount"]
 
 
 def check_required_columns(data: pd.DataFrame) -> None:
-    """Kontrollerar att nödvändiga kolumner finns."""
+    """Controlls that all the required columns are present."""
 
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Missing columns: {missing}")
     
-    logger.info("Alla nödvändiga kolumner hittades: %s kolumner.", len(REQUIRED_COLUMNS))
+    logger.info("All the required columns were found: %s columns.", len(REQUIRED_COLUMNS))
 
 
 def normalize_categorical_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Fyller saknade värden och normaliserar strängkolumner (region, product_category)."""
+    """Fills missing values and normalizes string columns (region, product_category)."""
 
     copied_data = data.copy()
     for column in CATEGORICAL_COLUMNS_TO_NORMALIZE:
         copied_data[column] = copied_data[column].fillna("Unknown").astype(str).str.strip().str.title()
 
-    logger.info("Normaliserade kolumner: %s.", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
+    logger.info("Normalized columns: %s.", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 
 
+def _coerce_and_clean_column(column: pd.Series, fallback: float) -> pd.Series:
+    """Converts to numerical, rejects negative values and fills in invalid/missing values with fallback."""
+
+    numeric_column = pd.to_numeric(column, errors="coerce")
+    numeric_column = numeric_column.where(numeric_column >= 0)
+
+    return numeric_column.fillna(fallback)
+
+
 def coerce_numeric_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Konverterar och fyller i saknade värden för quantity, unit_price och discount."""
+    """Applies helper function to convert and fill missing values in quantity, unit_price och discount."""
 
     copied_data = data.copy()
 
-    copied_data["quantity"] = pd.to_numeric(copied_data["quantity"], errors="coerce").fillna(1)
+    valid_unit_prices = pd.to_numeric(copied_data["unit_price"], errors="coerce")
+    valid_unit_prices = valid_unit_prices.where(valid_unit_prices >= 0)
+    unit_price_fallback = valid_unit_prices.median()
 
-    copied_data["unit_price"] = pd.to_numeric(copied_data["unit_price"], errors="coerce")
-    copied_data["unit_price"] = copied_data["unit_price"].fillna(copied_data["unit_price"].median())
+    copied_data["quantity"] = _coerce_and_clean_column(copied_data["quantity"], fallback=1)
+    copied_data["unit_price"] = _coerce_and_clean_column(copied_data["unit_price"], fallback=unit_price_fallback)
+    copied_data["discount"] = _coerce_and_clean_column(copied_data["discount"], fallback=0)
 
-    copied_data["discount"] = pd.to_numeric(copied_data["discount"], errors="coerce").fillna(0)
-
-    logger.info("Normaliserade kolumner: %s.", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
+    logger.info("Normalized columns: %s.", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 
 
 def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
-    """Konverterar kolumnen returned till boolean."""
+    """Converts the returned column to boolean."""
 
     copied_data = data.copy()
 
@@ -77,23 +87,26 @@ def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
         .isin(["true", "yes", "1", "ja"])
     )
 
-    logger.info("Normaliserade kolumn returned.")
+    logger.info("Normalized column returned.")
 
     return copied_data
 
 
 def validate_order_data(data: pd.DataFrame) -> pd.DataFrame:
-    """Applicerar valideringsfunktioner och returnerar en ren, validerad copia av datan.
-    Höjer ValueError om nödvändiga kolumner saknas."""
+    """Applies the validation functions and returns a clean copia of the data datan.
+    Raises ValueError if any required column is missing."""
 
-    logger.info("Validering startar.")
+    logger.info("Validation starts")
 
     check_required_columns(data)
+
+    if len(data) == 0:
+        raise ValueError("Empty data: there are no rows to validate")
 
     validated_data = normalize_categorical_columns(data)
     validated_data = coerce_numeric_columns(validated_data)
     validated_data = convert_returned_to_boolean(validated_data)
 
-    logger.info("Validering genomfört.")
+    logger.info("Validation completed")
 
     return validated_data
