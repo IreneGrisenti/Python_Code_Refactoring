@@ -30,7 +30,7 @@ def check_required_columns(data: pd.DataFrame) -> None:
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
-        raise ValueError(f"Saknade kolumner: {missing}")
+        raise ValueError(f"Missing columns: {missing}")
     
     logger.info("Alla nödvändiga kolumner hittades: %s kolumner.", len(REQUIRED_COLUMNS))
 
