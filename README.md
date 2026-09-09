@@ -1,7 +1,7 @@
 ## Project description  
 This project reads order data from a CSV file, cleans, validates the data and produces sales/returns reports.
 
-This project is a refactoring exercise. The unrefactored script is `original_order_report.py` and its output is saved in the `output` folder. It was kept to be able to compare outputs after refactoring.   
+The unrefactored script is `original_order_report.py` and its output is saved in the `output` folder. The originals were kept to be able to compare outputs after refactoring.   
 The refactored version is organized into `src/order_report` and its output is saved in `output_after_refactoring`.
 
 
@@ -48,7 +48,7 @@ Python_Code_Refactoring/
 ├── output_after_refactoring/     # output from the refactored pipeline
 ├── src/
 │   └── order_report/
-│       ├── __init__.py
+│       ├── __init__.py           # public API
 │       ├── config.py             # report configuration
 │       ├── file_handler.py       # reads input data, saves reports
 │       ├── logging_config.py     # logging setup
