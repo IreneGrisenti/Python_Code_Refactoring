@@ -1,5 +1,11 @@
 """
+Tests for file_handler.py.
 
+Checks that file_handler.py. functions perform corretly with the following tests:
+1. load_data reads a .csv file correctly.
+2. load_data raises FileNotFoundError when a given path doesn't exist.
+3. save_report writes the right content into the right file.
+4. save_report raises KeyError when given an unrecognized file name.
 """
 
 from pathlib import Path
@@ -12,6 +18,8 @@ from order_report.file_handler import (
 
 
 def test_load_data_reads_csv(tmp_path: Path) -> None:
+    """"Verifies that load_data correctly reads a .csv file.""" 
+
     csv_path = tmp_path / "order.csv"
     csv_path.write_text(
         "order_id,order_date,customer_id,region"
