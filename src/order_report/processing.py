@@ -1,4 +1,4 @@
-"""Ansvarar för att transformera och aggregera order-datan till rapporter."""
+"""Handles transforming and aggregating the order data into reports."""
 
 import pandas as pd
 import logging
@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 def add_calculated_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Beräknar ordervärde och rabatterat värde och returnerar det som df."""
+    """Calculates order value and discounted value and returns it as a df."""
 
-    logger.debug("Beräknar order_value och discounted_value för %d rader.", len(data))
+    logger.debug("Calculating order_value and discounted_value for %d rows", len(data))
 
     copied_data = data.copy()
 
@@ -21,7 +21,9 @@ def add_calculated_columns(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_order_overview(data: pd.DataFrame) -> pd.DataFrame:
-    """Tar emot en dataframe som redan inkluderar order_value och discounted_value, och returnerar en översikt."""
+    """Takes a dataframe that already includes order_value and discounted_value, and returns an overview."""
+
+    logger.info("Creating orders overview")
 
     total_sales = round(data["discounted_value"].sum(), 2)
 
@@ -40,25 +42,27 @@ def create_order_overview(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def _compute_group_metrics(data: pd.DataFrame, group_col: str) -> pd.DataFrame:
-    """Delad aggregeringslogik: order count, total sales och returns per group_col"""
+    """Takes an enriched dataframe and performs aggregation logic: order count, total sales, returns and return_rate per group_col."""
 
-    return data.groupby(group_col, as_index=False).agg(
+    result = data.groupby(group_col, as_index=False).agg(
         order_count=("order_id", "nunique"),
         total_sales=("discounted_value", "sum"),
         returns=("returned", "sum")
     )
 
+    result["return_rate"] = (result["returns"] / result["order_count"]).round(3)
+
+    return result
+
 
 def create_sales_report(data: pd.DataFrame, group_col: str, sort_col: str, ascending: bool = False) -> pd.DataFrame:
-    """Grupperar datan på group_col och beräknar antal ordrar, total försäljning, returer och returandel."""
+    """Takes an enriched dataframe and creates a sales report by group_col."""
 
-    logger.info("Skapar sales-rapport grupperad på '%s'.", group_col)
+    logger.info("Creating sales report grouped by '%s'", group_col)
 
     sales_result = _compute_group_metrics(data, group_col)
 
     sales_result["total_sales"] = sales_result["total_sales"].round(2)
-
-    sales_result["return_rate"] = (sales_result["returns"] / sales_result["order_count"]).round(3)
 
     sales_result = sales_result.sort_values(sort_col, ascending=ascending).reset_index(drop=True)
 
@@ -66,13 +70,11 @@ def create_sales_report(data: pd.DataFrame, group_col: str, sort_col: str, ascen
 
 
 def create_returns_report(data: pd.DataFrame, group_col: str, sort_col: str, ascending: bool = False) -> pd.DataFrame:
-    """Grupperar datan på group_col och beräknar antal ordrar, returer och returandel."""
+    """Takes an enriched dataframe and creates a returns report by group_col."""
 
-    logger.info("Skapar return-rapport grupperad på '%s'.", group_col)
+    logger.info("Creating returns report grouped by '%s'", group_col)
 
     returns_result = _compute_group_metrics(data, group_col)
-
-    returns_result["return_rate"] = (returns_result["returns"] / returns_result["order_count"]).round(3)
 
     returns_result = returns_result[[group_col, "order_count", "returns", "return_rate"]]
     returns_result = returns_result.sort_values(sort_col, ascending=ascending).reset_index(drop=True)

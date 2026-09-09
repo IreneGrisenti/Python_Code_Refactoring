@@ -32,7 +32,7 @@ def check_required_columns(data: pd.DataFrame) -> None:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Missing columns: {missing}")
     
-    logger.info("All the required columns were found: %s columns.", len(REQUIRED_COLUMNS))
+    logger.debug("All the required columns were found: %s columns", len(REQUIRED_COLUMNS))
 
 
 def normalize_categorical_columns(data: pd.DataFrame) -> pd.DataFrame:
@@ -42,7 +42,7 @@ def normalize_categorical_columns(data: pd.DataFrame) -> pd.DataFrame:
     for column in CATEGORICAL_COLUMNS_TO_NORMALIZE:
         copied_data[column] = copied_data[column].fillna("Unknown").astype(str).str.strip().str.title()
 
-    logger.info("Normalized columns: %s.", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
+    logger.debug("Normalized columns: %s", ", ".join(CATEGORICAL_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 
@@ -69,7 +69,7 @@ def coerce_numeric_columns(data: pd.DataFrame) -> pd.DataFrame:
     copied_data["unit_price"] = _coerce_and_clean_column(copied_data["unit_price"], fallback=unit_price_fallback)
     copied_data["discount"] = _coerce_and_clean_column(copied_data["discount"], fallback=0)
 
-    logger.info("Normalized columns: %s.", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
+    logger.debug("Normalized columns: %s", ", ".join(NUMERIC_COLUMNS_TO_NORMALIZE))
 
     return copied_data
 
@@ -87,7 +87,7 @@ def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
         .isin(["true", "yes", "1", "ja"])
     )
 
-    logger.info("Normalized column returned.")
+    logger.debug("Normalized column: returned")
 
     return copied_data
 
@@ -95,8 +95,6 @@ def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
 def validate_order_data(data: pd.DataFrame) -> pd.DataFrame:
     """Applies the validation functions and returns a clean copia of the data datan.
     Raises ValueError if any required column is missing."""
-
-    logger.info("Validation starts")
 
     check_required_columns(data)
 
@@ -106,7 +104,5 @@ def validate_order_data(data: pd.DataFrame) -> pd.DataFrame:
     validated_data = normalize_categorical_columns(data)
     validated_data = coerce_numeric_columns(validated_data)
     validated_data = convert_returned_to_boolean(validated_data)
-
-    logger.info("Validation completed")
 
     return validated_data

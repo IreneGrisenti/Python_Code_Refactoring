@@ -1,4 +1,4 @@
-"""Central konfiguration av paketets loggning."""
+"""Central configuration for the package logging."""
 
 import logging
 
@@ -7,7 +7,7 @@ LOGGER_NAME = "order_report"
 
 
 def configure_logging() -> None:
-    """Konfigurera logging för order_report."""
+    """Configures the logging for order_report."""
 
     package_logger = logging.getLogger(LOGGER_NAME)
     if package_logger.handlers:

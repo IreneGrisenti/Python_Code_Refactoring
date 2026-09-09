@@ -1,4 +1,4 @@
-"""Ansvarar för att sammanställa och spara samtliga order-rapporter."""
+"""Responsible for compiling and saving reports."""
 
 import pandas as pd
 import logging
@@ -12,10 +12,17 @@ logger = logging.getLogger(__name__)
  
 
 def run_pipeline(config: ReportConfig) -> dict[str, pd.DataFrame]:
-    """Kör hela pipelinen från inläsning till sparade rapporter."""
+    """Runs the entire pipeline from reading a file to saving reports."""
 
+    logger.info("Starting to load data")
     data = load_data(config.input_path)
+    logger.info("Data loaded")
+
+    logger.info("Starting validation process")
     validated_data = validate_order_data(data)
+    logger.info("Validation completed")
+
+    logger.info("Starting processing data")
     enriched_data = add_calculated_columns(validated_data)
 
     reports = {
@@ -24,10 +31,11 @@ def run_pipeline(config: ReportConfig) -> dict[str, pd.DataFrame]:
         "sales_by_region": create_sales_report(enriched_data, group_col="region", sort_col="total_sales"),
         "returns_by_category": create_returns_report(enriched_data, group_col="product_category", sort_col="return_rate")
     }
+    logger.info("Processing completed")
 
+    logger.info("Starting to save reports")
     for report_key, report in reports.items():
         save_report(report, config.output_path, report_key)
-
-    logger.info("Pipeline klar, %d rapporter sparade.", len(reports))
+    logger.info("Pipeline completed, %d reports saved in %s", len(reports), config.output_path)
 
     return reports

@@ -1,4 +1,4 @@
-"""Ansvarar för att läsa indata och spara rapporter."""
+"""Responsible to read and save files."""
 
 from pathlib import Path
 import pandas as pd
@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 def load_data(path: Path) -> pd.DataFrame:
-    logger.info("Läser order data från %s.", path)
+
+    logger.debug("Reading order data from %s", path)
 
     try:
         data = pd.read_csv(
@@ -29,7 +30,7 @@ def load_data(path: Path) -> pd.DataFrame:
     except FileNotFoundError as error:
         raise FileNotFoundError(f"Could not find file at {path}") from error
 
-    logger.info("Läste in %d rader.", len(data))
+    logger.debug("Read %d rows", len(data))
 
     return data
 
@@ -46,4 +47,4 @@ def save_report(report: pd.DataFrame, output_folder: Path, report_key: str) -> N
     
     report.to_csv(path, index=False)
     
-    logger.info("Sparade rapport %s till %s.", filename, path)
+    logger.debug("Saved report %s to %s", filename, path)
