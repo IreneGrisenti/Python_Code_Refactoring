@@ -1,4 +1,4 @@
-"""Kör order-rapportens pipeline."""
+"""Runs the order report pipeline."""
 
 from order_report.config import ReportConfig
 from order_report.logging_config import configure_logging
