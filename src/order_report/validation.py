@@ -30,6 +30,7 @@ def check_required_columns(data: pd.DataFrame) -> None:
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
+        logger.error("Missing columns: %s", missing)
         raise ValueError(f"Missing columns: {missing}")
     
     logger.debug("All the required columns were found: %s columns", len(REQUIRED_COLUMNS))
@@ -99,6 +100,7 @@ def validate_order_data(data: pd.DataFrame) -> pd.DataFrame:
     check_required_columns(data)
 
     if len(data) == 0:
+        logger.error("Empty data: there are no rows to validate")
         raise ValueError("Empty data: there are no rows to validate")
 
     validated_data = normalize_categorical_columns(data)

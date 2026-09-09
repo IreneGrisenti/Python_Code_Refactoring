@@ -28,6 +28,7 @@ def load_data(path: Path) -> pd.DataFrame:
                 "customer_id": str})
         
     except FileNotFoundError as error:
+        logger.exception("Could not find file at %s", path)
         raise FileNotFoundError(f"Could not find file at {path}") from error
 
     logger.debug("Read %d rows", len(data))
@@ -40,6 +41,7 @@ def save_report(report: pd.DataFrame, output_folder: Path, report_key: str) -> N
     try:
         filename = REPORT_FILENAMES[report_key]
     except KeyError as error:
+            logger.exception("Invalid report_key: %s", report_key)
             raise KeyError(f"Invalid report_key: {report_key}") from error
     
     path = output_folder / filename
