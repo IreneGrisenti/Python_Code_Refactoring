@@ -21,7 +21,7 @@ Koden går inte att återanvända eller testa i isolerade delar.
 
 **Konsekvens** - Programmet kan bara köras med exakt de sökvägarna. Det går inte att enkelt testa med tillfälliga filer, och programmet kraschar om outputmappen inte redan finns.
 
-**Förslag** - Samla sökvägarna i en `config.py` och låt sparfunktioner skapa målmappen vid behov.
+**Förslag** - Samla sökvägarna i en `config.py`, till exempel som standardvärden i en dataclass. På så sätt finns sökvägarna definierade på ett ställe och är enkla att hitta, men de blir samtidigt lättare att skapa ett annat objek med andra värden vid behov. Låt dessutom sparfunktioner skapa målmappen vid behov.
 
 
 ### Obs 3 - Statusmeddelanden använder print()
@@ -62,7 +62,7 @@ Koden går inte att återanvända eller testa i isolerade delar.
 
 ### Obs 7 - Duplicerad kod i rapportgenereringen
 
-**Observation:** `result1`, `result2` och `returns_by_category` följer samma mönster: `groupby(...).agg(...)`, avrundning av `total_sales`, beräkning av `return_rate`, sortering och sparning till CSV.  
+**Observation:** `result1`, `result2` och `returns_by_category` följer samma mönster: `groupby(...).agg(...)`, beräkning av `return_rate`, sortering och sparning till CSV.  
 Det som faktiskt skiljer dem åt är vilken kolumn de grupperar på, vilka kolumner som aggregeras och vilken kolumn resultatet sorteras på.
 
 **Konsekvens:** Samma logik är skriven ut tre gånger med små variationer, vilket bryter mot DRY-principen. En ändring i hur en rapport beräknas måste göras på tre ställen och risken för att missa ett av dem är hög.
