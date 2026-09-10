@@ -10,9 +10,9 @@ Uppdelningen gjorde det möjligt att skriva riktade tester som hjälpte mig uppt
 
 ## 3. Varför valde du den projektstruktur du använde?
 Jag fokuserade på att separera ansvarsområdena i det ursprungliga skriptet för att skapa moduler med tydliga uppgifter:  
-`file_handler.py` för att läsa in och spara data, `validation.py` för att rensa och validera den, `processing.py` för att transformera och aggregera den till rapporter, samt `pipeline.py` för att orkestrera dessa steg tillsammans, med `main.py` som startpunkt.  
+`file_handler.py` för att läsa in och spara data, `validation.py` för att rensa och validera den, `processing.py` för att transformera och aggregera den, samt `pipeline.py` för att orkestrera dessa steg tillsammans, med `main.py` som startpunkt.  
 Jag använde centraliserad loggning så att meddelanden från varje modul kunde konfigureras och följas konsekvent från ett och samma ställe.    
-Slutligen strukturerade jag `src/order_report` som ett installerbart paket (med en `pyproject.toml`), vilket höll en tydlig separation mellan källkod och tester, och gjorde det möjligt att importera modulerna på ett rent sätt istället för att förlita sig på relativa sökvägs-lösningar.
+Slutligen strukturerade jag `src/order_report` som ett installerbart paket (med en `pyproject.toml`), för att hålla en tydlig separation mellan källkod och tester. Det gjorde det möjligt att importera modulerna på ett rent sätt istället för att förlita sig på relativa sökvägs-lösningar.
 
 
 ## 4. Var använde du OOP/dataclass och varför passade det där?
@@ -21,15 +21,15 @@ Jag använde en dataclass (`ReportConfig`) i `config.py` eftersom den bara behö
 
 ## 5. Vilka viktiga beteenden skyddar dina automatiska tester, och vilken nytta ger testerna om programmet förändras i framtiden?
 Mina tester skyddar de viktigaste beräkningarna och felhanteringen i projektet:  
-att `order_value` och `discounted_value` beräknas korrekt,  
-att sammanfattningarna per kategori och region stämmer,  
 att `validate_order_data` fyller i saknade eller ogiltiga värden med rätt standardvärden,  
-att programmet kastar tydliga fel vid tom data, saknade kolumner eller ogiltiga inmatningar.  
-Nyttan är att jag i framtiden kan ändra eller refaktorera koden och snabbt se om en ändring råkar förändra ett resultat eller ett felbeteende jag inte avsett utan att behöva testa allt manuellt igen.
+att programmet kastar tydliga fel vid tom data, saknade kolumner eller ogiltiga inmatningar,  
+att `order_value` och `discounted_value` beräknas korrekt,  
+att sammanfattningarna per kategori och region stämmer.  
+Nyttan är att jag i framtiden kan ändra koden och snabbt se om en ändring råkar förändra ett resultat eller ett felbeteende jag inte avsett utan att behöva testa allt manuellt igen.
 
 
 ## 6. Vad var svårast?
-Det svåraste var testerna, att förstå vad som faktiskt behövde testas och att stoppa mig själv från att testa varje liten detalj.
+Det svåraste var testerna, att förstå vad som faktiskt behövde testas och att stoppa mig själv från att testa varje liten detalj i logiken.
 
 
 ## 7. Vad hade du velat förbättra ytterligare om du haft mer tid?
