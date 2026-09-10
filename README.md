@@ -6,18 +6,16 @@ The refactored version is organized into `src/order_report` and its output is sa
 
 
 ## Quick Start
-Clone the repo and install dependencies:  
+Clone the repo:  
 `git clone https://github.com/IreneGrisenti/Python_Code_Refactoring.git`  
-`cd Python_Code_Refactoring`   
 
 Create and activate a virtual environment:  
+`cd Python_Code_Refactoring`    
 `python -m venv .venv`  
 
-Windows PowerShell  
-`.venv\Scripts\Activate`  
-
-macOS/Linux  
-`source .venv/bin/activate`  
+`source .venv/bin/activate` (for macOS/Linux)  
+or  
+`.venv\Scripts\Activate` (for Windows PowerShell)  
 
 Install dependencies:  
 `python -m pip install -e .`  
@@ -34,7 +32,7 @@ Run the pipeline from the project root:
 
 
 ## How to run the tests
-Run the full test suite with detailed output showing each test individually:  
+Run the full test suite with detailed output for each test:  
 `pytest -v`
 
 
@@ -44,23 +42,23 @@ Run the full test suite with detailed output showing each test individually:
 Python_Code_Refactoring/
 ├── data/
 │   └── orders.csv                # sample input data
-├── output/                       # output from the original, unrefactored script
+├── output/                       # output from the original script
 ├── output_after_refactoring/     # output from the refactored pipeline
 ├── src/
 │   └── order_report/
 │       ├── __init__.py           # public API
 │       ├── config.py             # report configuration
-│       ├── file_handler.py       # reads input data, saves reports
+│       ├── file_handler.py       # reads input, saves outputs
 │       ├── logging_config.py     # logging setup
 │       ├── pipeline.py           # orchestrates load > validate > process > save
-│       ├── processing.py         # transformations and report generation
+│       ├── processing.py         # transformations and aggregation
 │       └── validation.py         # data cleaning and validation
 ├── tests/
 │   ├── test_file_handler.py
 │   ├── test_processing.py
 │   └── test_validation.py
 ├── __main__.py                   # entry point
-├── original_order_report.py      # original, unrefactored script
+├── original_order_report.py      # original script
 ├── pyproject.toml                # project metadata and dependencies
 ├── code_review.md                # review and suggested improvements for the original script
 ├── reflection.md                 # final reflection
