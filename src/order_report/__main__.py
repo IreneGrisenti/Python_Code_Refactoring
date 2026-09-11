@@ -1,5 +1,4 @@
-"""Runs the order report pipeline."""
-
+"""Entry point that runs the order report pipeline."""
 
 import logging
 from order_report.config import ReportConfig

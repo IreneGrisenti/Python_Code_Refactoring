@@ -1,4 +1,4 @@
-"""order_report: read, cleans, processes and reports on e-commerce order data."""
+"""order_report: reads, cleans, processes and creates reports on e-commerce order data."""
 
 from order_report.file_handler import load_data, save_report
 from order_report.cleaning import clean_order_data

@@ -17,7 +17,7 @@ import pandas as pd
 import pytest
 
 from order_report.cleaning import (
-    check_required_columns, 
+    _check_required_columns, 
     normalize_categorical_columns,
     coerce_numeric_columns,
     convert_returned_to_boolean,
@@ -40,7 +40,7 @@ def test_check_required_columns_all_present() -> None:
         "returned",
     ])
 
-    result = check_required_columns(data)
+    result = _check_required_columns(data)
 
     assert result is None
 
@@ -60,7 +60,7 @@ def test_check_required_columns_multiple_missing() -> None:
     with pytest.raises(
         ValueError,
         match="Missing columns: discount, quantity, unit_price"
-    ): check_required_columns(data)
+    ): _check_required_columns(data)
 
 
 def test_normalize_categorical_columns_cleans_and_fills_missing() -> None:

@@ -1,4 +1,4 @@
-"""Responsible for validating and cleaning the order data before further processing."""
+"""Responsible for validating and cleaning the data before further processing."""
 
 import pandas as pd
 import logging
@@ -24,7 +24,7 @@ CATEGORICAL_COLUMNS_TO_NORMALIZE = ["region", "product_category"]
 NUMERIC_COLUMNS_TO_NORMALIZE = ["quantity", "unit_price", "discount"]
 
 
-def check_required_columns(data: pd.DataFrame) -> None:
+def _check_required_columns(data: pd.DataFrame) -> None:
     """Controlls that all the required columns are present."""
 
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)
@@ -96,7 +96,7 @@ def clean_order_data(data: pd.DataFrame) -> pd.DataFrame:
     """Applies the validation and cleaning functions and returns a clean copia of the data datan.
     Raises ValueError if any required column is missing."""
 
-    check_required_columns(data)
+    _check_required_columns(data)
 
     if len(data) == 0:
         raise ValueError("Empty data: there are no rows to clean")

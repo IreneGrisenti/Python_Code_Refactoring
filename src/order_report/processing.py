@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_calculated_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Calculates order value and discounted value and returns it as a df."""
+    """Calculates order value and discounted value, and returns it as a df."""
 
     logger.debug("Calculating order_value and discounted_value for %d rows", len(data))
 
@@ -21,7 +21,7 @@ def add_calculated_columns(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def _check_required_columns(data: pd.DataFrame, required_columns: set[str]) -> None:
-    """Checks that all required columns are present in the dataframe."""
+    """Checks that all required columns are present in the input dataframe."""
 
     missing_columns = required_columns - set(data.columns)
 
@@ -30,7 +30,7 @@ def _check_required_columns(data: pd.DataFrame, required_columns: set[str]) -> N
 
 
 def create_order_overview(data: pd.DataFrame) -> pd.DataFrame:
-    """Takes a dataframe that already includes order_value and discounted_value, and returns an overview."""
+    """Takes a dataframe that includes order_id, discounted_value and returned, and returns an overview."""
 
     logger.info("Creating orders overview")
 
@@ -53,7 +53,7 @@ def create_order_overview(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def _compute_group_metrics(data: pd.DataFrame, group_col: str) -> pd.DataFrame:
-    """Takes an enriched dataframe and performs aggregation logic: order count, total sales, returns and return_rate per group_col."""
+    """Performs aggregation logic: order count, total sales, returns and return_rate per group_col."""
 
     result = data.groupby(group_col, as_index=False).agg(
         order_count=("order_id", "nunique"),
@@ -67,7 +67,7 @@ def _compute_group_metrics(data: pd.DataFrame, group_col: str) -> pd.DataFrame:
 
 
 def create_sales_report(data: pd.DataFrame, group_col: str, sort_col: str, ascending: bool = False) -> pd.DataFrame:
-    """Takes an enriched dataframe and creates a sales report by group_col."""
+    """Takes a dataframe that includes order_id, discounted_value, and creates a sales report by group_col."""
 
     logger.info("Creating sales report grouped by '%s'", group_col)
 
@@ -83,7 +83,7 @@ def create_sales_report(data: pd.DataFrame, group_col: str, sort_col: str, ascen
 
 
 def create_returns_report(data: pd.DataFrame, group_col: str, sort_col: str, ascending: bool = False) -> pd.DataFrame:
-    """Takes an enriched dataframe and creates a returns report by group_col."""
+    """Takes a dataframe that includes order_id, discounted_value, and creates a returns report by group_col."""
 
     logger.info("Creating returns report grouped by '%s'", group_col)
 

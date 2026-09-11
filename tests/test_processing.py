@@ -3,10 +3,12 @@ Tests for processing.py.
 
 Checks that processing.py functions perform corretly with the following tests:
 1. add_calculated_columns computes order_value and discounted_value correctly.
-2. create_order_overview aggregates total_sales, order_count and returns correctly.
-3. create_sales_report groups by product_category and computes order_count, total_sales and return_rate correctly.
-4. create_sales_report groups by region and computes order_count, total_sales and return_rate correctly.
-5. create_returns_report groups by product_category and computes order_count, returns and return_rate correctly.
+2. add_calculated_columns verifies the columns are correctly calculated at edge values for quantity and discount.
+3. create_order_overview aggregates total_sales, order_count and returns correctly.
+4. create_order_overview raises ValueError when a required column is missing from the input data.
+5. create_sales_report groups by product_category and computes order_count, total_sales and return_rate correctly.
+6. create_sales_report groups by region and computes order_count, total_sales and return_rate correctly.
+7. create_returns_report groups by product_category and computes order_count, returns and return_rate correctly.
 """
 
 
