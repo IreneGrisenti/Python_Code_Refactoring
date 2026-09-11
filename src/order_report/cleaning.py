@@ -1,4 +1,4 @@
-"""Responsible for checking and cleaning the order data before further processing."""
+"""Responsible for validating and cleaning the order data before further processing."""
 
 import pandas as pd
 import logging
@@ -92,17 +92,17 @@ def convert_returned_to_boolean(data: pd.DataFrame) -> pd.DataFrame:
     return copied_data
 
 
-def validate_order_data(data: pd.DataFrame) -> pd.DataFrame:
-    """Applies the validation functions and returns a clean copia of the data datan.
+def clean_order_data(data: pd.DataFrame) -> pd.DataFrame:
+    """Applies the validation and cleaning functions and returns a clean copia of the data datan.
     Raises ValueError if any required column is missing."""
 
     check_required_columns(data)
 
     if len(data) == 0:
-        raise ValueError("Empty data: there are no rows to validate")
+        raise ValueError("Empty data: there are no rows to clean")
 
-    validated_data = normalize_categorical_columns(data)
-    validated_data = coerce_numeric_columns(validated_data)
-    validated_data = convert_returned_to_boolean(validated_data)
+    cleaned_data = normalize_categorical_columns(data)
+    cleaned_data = coerce_numeric_columns(cleaned_data)
+    cleaned_data = convert_returned_to_boolean(cleaned_data)
 
-    return validated_data
+    return cleaned_data

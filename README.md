@@ -1,5 +1,5 @@
 ## Project description  
-This project reads order data from a CSV file, cleans, validates the data and produces sales/returns reports.
+This project reads order data from a CSV file, validates, cleans the data and produces sales/returns reports.
 
 The unrefactored script is `original_order_report.py` and its output is saved in the `output` folder. The originals were kept to be able to compare outputs after refactoring.   
 The refactored version is organized into `src/order_report` and its output is saved in `output_after_refactoring`.
@@ -28,7 +28,7 @@ Packages: NumPy, Pandas, Pytest (see `pyproject.toml`)
 
 ## How to run the program
 Run the pipeline from the project root:   
-`python __main__.py`
+`python -m order_report`
 
 
 ## How to run the tests
@@ -47,17 +47,17 @@ Python_Code_Refactoring/
 ├── src/
 │   └── order_report/
 │       ├── __init__.py           # public API
+│       ├── __main__.py           # entry point
+│       ├── cleaning.py           # data validation and cleaning
 │       ├── config.py             # report configuration
 │       ├── file_handler.py       # reads input, saves outputs
 │       ├── logging_config.py     # logging setup
-│       ├── pipeline.py           # orchestrates load > validate > process > save
-│       ├── processing.py         # transformations and aggregation
-│       └── validation.py         # data cleaning and validation
+│       ├── pipeline.py           # orchestrates load > clean > process > save
+│       └── processing.py         # transformations and aggregation
 ├── tests/
+│   ├── test_cleaning.py 
 │   ├── test_file_handler.py
-│   ├── test_processing.py
-│   └── test_validation.py
-├── __main__.py                   # entry point
+│   └── test_processing.py
 ├── original_order_report.py      # original script
 ├── pyproject.toml                # project metadata and dependencies
 ├── code_review.md                # review and suggested improvements for the original script

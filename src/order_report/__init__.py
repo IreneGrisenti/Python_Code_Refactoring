@@ -1,7 +1,7 @@
-"""order_report: read, validates, processes and reports on e-commerce order data."""
+"""order_report: read, cleans, processes and reports on e-commerce order data."""
 
 from order_report.file_handler import load_data, save_report
-from order_report.validation import validate_order_data
+from order_report.cleaning import clean_order_data
 from order_report.processing import (
     add_calculated_columns,
     create_order_overview,
@@ -14,7 +14,7 @@ from order_report.config import ReportConfig
 __all__ = [
     "load_data",
     "save_report",
-    "validate_order_data",
+    "clean_order_data",
     "add_calculated_columns",
     "create_order_overview",
     "create_sales_report",

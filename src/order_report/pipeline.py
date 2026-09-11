@@ -4,7 +4,7 @@ import pandas as pd
 import logging
 from order_report.config import ReportConfig
 from order_report.file_handler import load_data, save_report
-from order_report.validation import validate_order_data
+from order_report.cleaning import clean_order_data
 from order_report.processing import add_calculated_columns, create_order_overview, create_sales_report, create_returns_report
 
 
@@ -18,12 +18,12 @@ def run_pipeline(config: ReportConfig) -> dict[str, pd.DataFrame]:
     data = load_data(config.input_path)
     logger.info("Data loaded")
 
-    logger.info("Starting validation process")
-    validated_data = validate_order_data(data)
-    logger.info("Validation completed")
+    logger.info("Starting data cleaning")
+    cleaned_data = clean_order_data(data)
+    logger.info("Cleaning completed")
 
     logger.info("Starting processing data")
-    enriched_data = add_calculated_columns(validated_data)
+    enriched_data = add_calculated_columns(cleaned_data)
 
     reports = {
         "overview": create_order_overview(enriched_data),

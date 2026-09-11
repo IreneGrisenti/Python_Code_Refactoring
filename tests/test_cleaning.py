@@ -1,27 +1,27 @@
 """ 
-Tests for validation.py.
+Tests for cleaning.py.
 
-Checks that validation.py functions perform correctly with the following tests:
+Checks that cleaning.py functions perform correctly with the following tests:
 1. All required columns are present: does not raise an error.
 2. Multiple missing columns: raises ValueError naming each missing column.
 3. Categorical columns (region, product_category) are trimmed, title-cased and missing values filled with "Unknown".
 4. Numeric strings are converted correctly and missing values are filled with the right default per column.
 5. Invalid strings and negative values are treated as invalid and filled with the same defaults as missing values.
 6. Recognized true variants, casing, whitespace and missing values are converted correctly to boolean.
-7. Full validation pipeline on mixed, unclean data produces correctly cleaned output across all columns.
+7. Full cleaning pipeline on mixed, unclean data produces correctly cleaned output across all columns.
 8. Empty dataframe raises ValueError instead of silently passing through.
-9. validate_order_data does not mutate the original input dataframe.
+9. clean_order_data does not mutate the original input dataframe.
 """
 
 import pandas as pd
 import pytest
 
-from order_report.validation import (
+from order_report.cleaning import (
     check_required_columns, 
     normalize_categorical_columns,
     coerce_numeric_columns,
     convert_returned_to_boolean,
-    validate_order_data
+    clean_order_data
 )
 
 
@@ -137,8 +137,8 @@ def test_convert_returned_to_boolean_recognizes_variants() -> None:
     pd.testing.assert_frame_equal(result, expected)
 
 
-def test_validate_order_data_valid_input_returns_cleaned_data() -> None:
-    """Verifies that the validation pipeline works as expected taking in raw data, cleaning it and returning a corrected dataframe."""
+def test_clean_order_data_valid_input_returns_cleaned_data() -> None:
+    """Verifies that the cleaning pipeline works as expected taking in raw data, cleaning it and returning a corrected dataframe."""
 
     data = pd.DataFrame({
         "order_id": ["O0001", "O0002", "O0003"],
@@ -164,12 +164,12 @@ def test_validate_order_data_valid_input_returns_cleaned_data() -> None:
         "returned": [True, False, False],
     })
 
-    result = validate_order_data(data)
+    result = clean_order_data(data)
 
     pd.testing.assert_frame_equal(result, expected)
 
 
-def test_validate_order_data_empty_dataframe_raises_valueerror() -> None:
+def test_clean_order_data_empty_dataframe_raises_valueerror() -> None:
     """Verifies that a ValueError is raised in case the dataframe doesn't contain any rows."""
 
     data = pd.DataFrame({
@@ -186,13 +186,13 @@ def test_validate_order_data_empty_dataframe_raises_valueerror() -> None:
 
     with pytest.raises(
         ValueError,
-        match="Empty data: there are no rows to validate"
-    ): validate_order_data(data)
+        match="Empty data: there are no rows to clean"
+    ): clean_order_data(data)
 
 
 
-def test_validate_order_data_does_not_mutate_input() -> None:
-    """Verifies that the validation pipeline does not mutate the original dataframe."""
+def test_clean_order_data_does_not_mutate_input() -> None:
+    """Verifies that the cleaning pipeline does not mutate the original dataframe."""
 
     data = pd.DataFrame({
         "order_id": ["O0001", "O0002", "O0003"],
@@ -208,6 +208,6 @@ def test_validate_order_data_does_not_mutate_input() -> None:
 
     original = data.copy()
 
-    result = validate_order_data(data)
+    result = clean_order_data(data)
 
     pd.testing.assert_frame_equal(data, original)
