@@ -20,10 +20,21 @@ def add_calculated_columns(data: pd.DataFrame) -> pd.DataFrame:
     return copied_data
 
 
+def _check_required_columns(data: pd.DataFrame, required_columns: set[str]) -> None:
+    """Checks that all required columns are present in the dataframe."""
+
+    missing_columns = required_columns - set(data.columns)
+
+    if missing_columns:
+        raise ValueError(f"Missing columns: {', '.join(sorted(missing_columns))}")
+
+
 def create_order_overview(data: pd.DataFrame) -> pd.DataFrame:
     """Takes a dataframe that already includes order_value and discounted_value, and returns an overview."""
 
     logger.info("Creating orders overview")
+
+    _check_required_columns(data, {"order_id", "discounted_value", "returned"})
 
     total_sales = round(data["discounted_value"].sum(), 2)
 
@@ -60,6 +71,8 @@ def create_sales_report(data: pd.DataFrame, group_col: str, sort_col: str, ascen
 
     logger.info("Creating sales report grouped by '%s'", group_col)
 
+    _check_required_columns(data, {"order_id", "discounted_value", "returned"})
+    
     sales_result = _compute_group_metrics(data, group_col)
 
     sales_result["total_sales"] = sales_result["total_sales"].round(2)
@@ -74,6 +87,8 @@ def create_returns_report(data: pd.DataFrame, group_col: str, sort_col: str, asc
 
     logger.info("Creating returns report grouped by '%s'", group_col)
 
+    _check_required_columns(data, {"order_id", "discounted_value", "returned"})
+    
     returns_result = _compute_group_metrics(data, group_col)
 
     returns_result = returns_result[[group_col, "order_count", "returns", "return_rate"]]

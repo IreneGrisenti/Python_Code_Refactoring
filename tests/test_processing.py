@@ -24,15 +24,9 @@ def test_add_calculated_columns_normal() -> None:
     """Verifies that order_value and discounted_value are calculated correctly from quantity, unit_price and discount."""
 
     data = pd.DataFrame({
-        "order_id": ["O0001", "O0002", "O0003"],
-        "order_date": ["2026-01-04", "2026-03-17", "2026-03-13"],
-        "customer_id": ["C018", "C028", "C013"],
-        "region": ["South", "North", "West"],
-        "product_category": ["Electronics", "Electronics", "Electronics"],
         "quantity": [1.0, 1.0, 2.0],
         "unit_price": [100.0, 100.0, 200.0],
         "discount": [0.0, 0.05, 0.2],
-        "returned": [True, False, False],
     })
 
     result = add_calculated_columns(data)
@@ -41,15 +35,26 @@ def test_add_calculated_columns_normal() -> None:
     assert result["discounted_value"].tolist() == pytest.approx([100.0, 95.0, 320.0])
 
 
+def test_add_calculated_columns_boundary_values() -> None:
+    """Verifies order_value and discount_value at zero quantity, 0% discount and 100% discount."""
+
+    data = pd.DataFrame({
+        "quantity": [0.0, 2.0, 3.0],
+        "unit_price": [100.0, 50.0, 10.0],
+        "discount": [0.0, 1.0, 0.0],
+    })
+
+    result = add_calculated_columns(data)
+
+    assert result["order_value"].tolist() == pytest.approx([0.0, 100.0, 30.0])
+    assert result["discounted_value"].tolist() == pytest.approx([0.0, 0.0, 30.0])
+
+
 def test_create_order_overview_normal() -> None:
     """Verifies that total_sales, order_count and return_count are aggregated correctly."""
 
     data = pd.DataFrame({
             "order_id": ["O0001", "O0002", "O0003"],
-            "order_date": ["2026-01-04", "2026-03-17", "2026-03-13"],
-            "customer_id": ["C018", "C028", "C013"],
-            "region": ["South", "North", "West"],
-            "product_category": ["Electronics", "Electronics", "Electronics"],
             "quantity": [1.0, 1.0, 2.0],
             "unit_price": [100.0, 100.0, 200.0],
             "discount": [0.0, 0.05, 0.2],
@@ -65,7 +70,24 @@ def test_create_order_overview_normal() -> None:
         })
 
     pd.testing.assert_frame_equal(expected, result)
-    
+
+
+def test_create_order_overview_missing_col() -> None:
+    """Verifies that create_order_overview raises ValueError when a required column is missing from the input data."""
+
+    data = pd.DataFrame({
+                "order_id": ["O0001", "O0002", "O0003"],
+                "quantity": [1.0, 1.0, 2.0],
+                "unit_price": [100.0, 100.0, 200.0],
+                "discount": [0.0, 0.05, 0.2],
+                "returned": [True, False, False],
+                })
+
+    with pytest.raises(
+        ValueError,
+        match="Missing columns: discounted_value"
+    ): create_order_overview(data)
+
 
 def test_create_sales_report_by_category() -> None:
     """Verifies that create_sales_report correctly computes order_count, total_sales and return_rate when grouped by product_category."""
